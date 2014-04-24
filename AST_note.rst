@@ -1,0 +1,187 @@
+
+- PROGRAM
+    - GLOBAL_DECL_LIST
+        - GLOBAL_DECL
+
+
+"PROGRAM", 
+    "GLOBAL_DECL_LIST", 
+        "GLOBAL_DECL", 
+        
+"DECL_LIST", 
+"FUNCTION_DECL", 
+    "TYPE_DECL", 
+    "PARAM_LIST", 
+        "PARAM", 
+"DIM_FN", 
+"DIMFN1", 
+"EXPR_NULL", 
+"BLOCK", 
+"DECL", 
+"TYPE_DECL", 
+"VAR_DECL",
+
+
+    "TYPE", "STRUCT_TYPE", "DEF_LIST", "DEF", "OPT_TAG", "TAG", "ID_LIST", "DIM_DECL", "CEXPR", "MCEXPR", "CFACTOR", "INIT_ID_LIST", "INIT_ID", "STMT_LIST", "STMT", "ASSIGN_EXPR_LIST",
+    "NONEMPTY_ASSIGN_EXPR_LIST", "TEST", "ASSIGN_EXPR", "RELOP_EXPR", "RELOP_TERM", "RELOP_FACTOR", "REL_OP", "RELOP_EXPR_LIST", "NONEMPTY_RELOP_EXPR_LIST", "EXPR", "ADD_OP", "TERM",
+    "MUL_OP", "FACTOR", "VAR_REF", "DIM", "STRUCT_TAIL", "NUL","ID_value", "CONST_value"};
+
+
+program		: global_decl_list { $$=Allocate(PROGRAM_NODE);  makeChild($$,$1); prog=$$;}
+		    | { $$=Allocate(PROGRAM_NODE); prog=$$;}
+
+global_decl_list: global_decl_list global_decl 
+                | global_decl
+
+global_decl	: decl_list function_decl
+            | function_decl 
+
+function_decl	: type ID MK_LPAREN param_list MK_RPAREN MK_LBRACE block MK_RBRACE     
+                | VOID ID MK_LPAREN param_list MK_RPAREN MK_LBRACE block MK_RBRACE      
+                | type ID MK_LPAREN  MK_RPAREN MK_LBRACE block MK_RBRACE 
+                | VOID ID MK_LPAREN  MK_RPAREN MK_LBRACE block MK_RBRACE 
+
+param_list	: param_list MK_COMMA  param 
+            | param	
+
+param		: type ID 
+            | type ID dim_fn 
+
+dim_fn		: MK_LB expr_null MK_RB 
+            | dim_fn MK_LB expr MK_RB
+
+expr_null	: expr 
+            |
+
+block       : decl_list stmt_list 
+            | stmt_list  
+            | decl_list 
+            | 
+
+decl_list	: decl_list decl 
+            | decl 
+
+decl		: type_decl 
+            | var_decl 
+
+type_decl 	: TYPEDEF type id_list MK_SEMICOLON  
+            | TYPEDEF VOID id_list MK_SEMICOLON 
+
+var_decl	: type init_id_list MK_SEMICOLON 
+            | ID id_list MK_SEMICOLON
+
+type		: INT 
+            | FLOAT 
+
+id_list		: ID 
+            | id_list MK_COMMA ID 
+            | id_list MK_COMMA ID dim_decl
+            | ID dim_decl
+
+dim_decl	: MK_LB cexpr MK_RB 
+            TODO: Try if you can define a recursive production rule
+            | .......
+
+cexpr		: cexpr OP_PLUS mcexpr 
+            | cexpr OP_MINUS mcexpr
+            | mcexpr 
+
+mcexpr		: mcexpr OP_TIMES cfactor 
+            | mcexpr OP_DIVIDE cfactor 
+            | cfactor 
+
+cfactor:	CONST 
+            | MK_LPAREN cexpr MK_RPAREN 
+
+init_id_list	: init_id 
+                | init_id_list MK_COMMA init_id 
+
+init_id		: ID (變數)
+            | ID dim_decl (多維變數)
+            | ID OP_ASSIGN relop_expr (有初始化的變數)
+
+stmt_list	: stmt_list stmt 
+            | stmt
+
+stmt		: MK_LBRACE block MK_RBRACE 
+            TODO: | While Statement g
+            TODO: | While Statement g
+            | FOR MK_LPAREN assign_expr_list MK_SEMICOLON relop_expr_list MK_SEMICOLON assign_expr_list MK_RPAREN stmt
+            | var_ref OP_ASSIGN relop_expr MK_SEMICOLON
+            TODO: | If Statement g
+            TODO: | If Statement g
+            TODO: | If then else g
+            TODO: | If then else g
+            TODO: | function call g
+            TODO: | function call g
+            | MK_SEMICOLON 
+            | RETURN MK_SEMICOLON  
+            | RETURN relop_expr MK_SEMICOLON
+
+assign_expr_list : nonempty_assign_expr_list 
+                 |  
+
+nonempty_assign_expr_list        : nonempty_assign_expr_list MK_COMMA assign_expr 
+                                 | assign_expr
+
+test		: assign_expr
+
+assign_expr     : ID OP_ASSIGN relop_expr 
+                | relop_expr
+
+relop_expr	: relop_term 
+            | relop_expr OP_OR relop_term
+
+relop_term	: relop_factor 
+            | relop_term OP_AND relop_factor
+
+relop_factor	: expr
+                | expr rel_op expr 
+
+rel_op		: OP_EQ
+            | OP_GE 
+            | OP_LE 
+            | OP_NE 
+            | OP_GT 
+            | OP_LT 
+
+relop_expr_list	: nonempty_relop_expr_list 
+                | 
+
+nonempty_relop_expr_list	: nonempty_relop_expr_list MK_COMMA relop_expr
+                            | relop_expr 
+
+expr		: expr add_op term 
+            | term 
+
+add_op		: OP_PLUS
+            | OP_MINUS 
+
+term		: term mul_op factor
+            | factor
+
+mul_op		: OP_TIMES
+            | OP_DIVIDE 
+
+factor		: MK_LPAREN relop_expr MK_RPAREN
+            TODO: | -(<relop_expr>) e.g. -(4) g
+            TODO: | -(<relop_expr>) e.g. -(4) g
+            | OP_NOT MK_LPAREN relop_expr MK_RPAREN
+            | CONST 
+            TODO: | -<constant> e.g. -4 g
+            TODO: | -<constant> e.g. -4 g
+            | OP_NOT CONST
+            | ID MK_LPAREN relop_expr_list MK_RPAREN 
+            TODO: | -<function call> e.g. -f(4) g
+            TODO: | -<function call> e.g. -f(4) g
+            | OP_NOT ID MK_LPAREN relop_expr_list MK_RPAREN
+            | var_ref 
+            TODO: | -<var_ref> e.g. -var g
+            TODO: | -<var_ref> e.g. -var g
+            | OP_NOT var_ref 
+
+var_ref		: ID 
+            | ID dim_list 
+
+dim_list	: dim_list MK_LB expr MK_RB 
+            | MK_LB expr MK_RB
