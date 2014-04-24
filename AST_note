@@ -51,7 +51,6 @@ id_list     : ID
 
 dim_decl    : MK_LB cexpr MK_RB 
             TODO: Try if you can define a recursive production rule
-            | .......
 
 cexpr       : cexpr OP_PLUS mcexpr 
             | cexpr OP_MINUS mcexpr
@@ -75,12 +74,12 @@ stmt_list   : stmt_list stmt
             | stmt
 
 stmt        : MK_LBRACE block MK_RBRACE 
-            TODO: | While Statement g
+            TODO: | While Statement
             | FOR MK_LPAREN assign_expr_list MK_SEMICOLON relop_expr_list MK_SEMICOLON assign_expr_list MK_RPAREN stmt
             | var_ref OP_ASSIGN relop_expr MK_SEMICOLON
-            TODO: | If Statement g
-            TODO: | If then else g
-            TODO: | function call g
+            TODO: | If Statement
+            TODO: | If then else
+            TODO: | function call
             | MK_SEMICOLON 
             | RETURN MK_SEMICOLON  
             | RETURN relop_expr MK_SEMICOLON
@@ -95,6 +94,12 @@ test            : assign_expr
 
 assign_expr     : ID OP_ASSIGN relop_expr 
                 | relop_expr
+
+relop_expr_list : nonempty_relop_expr_list 
+                | 
+
+nonempty_relop_expr_list    : nonempty_relop_expr_list MK_COMMA relop_expr
+                            | relop_expr 
 
 relop_expr      : relop_term 
                 | relop_expr OP_OR relop_term
@@ -112,11 +117,6 @@ rel_op      : OP_EQ
             | OP_GT 
             | OP_LT 
 
-relop_expr_list : nonempty_relop_expr_list 
-                | 
-
-nonempty_relop_expr_list    : nonempty_relop_expr_list MK_COMMA relop_expr
-                            | relop_expr 
 
 expr        : expr add_op term 
             | term 

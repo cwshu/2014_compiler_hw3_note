@@ -10,15 +10,6 @@ program
                     - decl_list
                     - stmt_list
 
-
-typedef int[10] haha;
-int a;
-
-int f( param_list ){
-    block
-}
-
-            
 decl_list
     - decl (many)
         - type_decl
@@ -42,9 +33,15 @@ stmt_list
 
         | ;
         | return ;
-        | return expression;
+        | return expression
+
+
+dimension
+---------
+dim_decl (array 宣告)
+dim_list (array 使用)
+dim_fn   (array in function parameter)
 
 未完成 grammar ()
     - dim_decl
     - stmt
-    - factor
