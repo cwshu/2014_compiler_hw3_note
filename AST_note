@@ -68,7 +68,7 @@ init_id_list    : init_id
                 | init_id_list MK_COMMA init_id 
 
 init_id     : ID (變數)
-            | ID dim_decl (多維變數)
+            | ID dim_decl (array)
             | ID OP_ASSIGN relop_expr (有初始化的變數)
 
 stmt_list   : stmt_list stmt 
@@ -76,14 +76,10 @@ stmt_list   : stmt_list stmt
 
 stmt        : MK_LBRACE block MK_RBRACE 
             TODO: | While Statement g
-            TODO: | While Statement g
             | FOR MK_LPAREN assign_expr_list MK_SEMICOLON relop_expr_list MK_SEMICOLON assign_expr_list MK_RPAREN stmt
             | var_ref OP_ASSIGN relop_expr MK_SEMICOLON
             TODO: | If Statement g
-            TODO: | If Statement g
             TODO: | If then else g
-            TODO: | If then else g
-            TODO: | function call g
             TODO: | function call g
             | MK_SEMICOLON 
             | RETURN MK_SEMICOLON  
@@ -135,21 +131,17 @@ mul_op      : OP_TIMES
             | OP_DIVIDE 
 
 factor      : MK_LPAREN relop_expr MK_RPAREN
-            TODO: | -(<relop_expr>) e.g. -(4) g
-            TODO: | -(<relop_expr>) e.g. -(4) g
             | OP_NOT MK_LPAREN relop_expr MK_RPAREN
+                e.g. -(4)
             | CONST 
-            TODO: | -<constant> e.g. -4 g
-            TODO: | -<constant> e.g. -4 g
             | OP_NOT CONST
+                e.g. -4
             | ID MK_LPAREN relop_expr_list MK_RPAREN 
-            TODO: | -<function call> e.g. -f(4) g
-            TODO: | -<function call> e.g. -f(4) g
             | OP_NOT ID MK_LPAREN relop_expr_list MK_RPAREN
+                e.g. -f(4)
             | var_ref 
-            TODO: | -<var_ref> e.g. -var g
-            TODO: | -<var_ref> e.g. -var g
             | OP_NOT var_ref 
+                e.g. -var
 
 var_ref     : ID 
             | ID dim_list 
