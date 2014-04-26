@@ -4,7 +4,7 @@
 
 2. 把每個 grammar 的 semantic action 完成 (即 yacc 中每個 rule 的 action).
 
-每個 grammar 的 AST structure 可以參考 sample/
+每個 grammar 的 AST structure 可以參考 `sample/`
 
 files
 -----
