@@ -1,8 +1,10 @@
+grammar 概略
+-------------
 program
     - global_decl_list
         - global_decl (many)
             - decl_list 
-            - function_decl
+            - function_decl (其實是 C 的 function definition)
                 - param_list
                     - param
                         - dim
@@ -12,22 +14,21 @@ program
 
 decl_list
     - decl (many)
-        - type_decl
+        | type_decl
             - typedef
         | var_decl
             - 變數宣告
-(id_list, init_id_list, dim_decl, cexpr(mcexpr, cfactor))
 
 stmt_list
     - stmt (many)
-        - { block }
+        | { block }
 
-        |  while_stmt 
+        | [TODO] while_stmt 
         | for_stmt
-        |  if_stmt
-        |  if_then_else_stmt
+        | [TODO] if_stmt
+        | [TODO] if_then_else_stmt
 
-        |  function_call
+        | [TODO] function_call
 
         | assignment (a = b + c)
 
@@ -66,6 +67,7 @@ operator 優先度
 - OP_PLUS, OP_MINUS
 - OP_TIMES, OP_DIVIDE
 - OP_NOT
+
 
 - cexpr
     - OP_PLUS, OP_MINUS
